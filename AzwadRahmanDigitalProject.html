@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
- <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" />
+
 <style>
 body{
     text-align: center;
@@ -29,7 +29,8 @@ body{
   style="width:80%; max-width:1280px; height:auto; aspect-ratio:1280/720; border:0; display:block; margin:0 auto;">
 </iframe>
 
-        
+ <button class="Likebuttons">Like</button>
+ <span class="Numlikes">0</span>     
     </div>
 
 
@@ -41,13 +42,66 @@ body{
   style="width:80%; max-width:1280px; height:auto; aspect-ratio:1280/720; border:0; display:block; margin:0 auto;">
 </iframe>
 
-  
+ <button class="Likebuttons">Like</button>
+ <span class="Numlikes">0</span>     
+    </div>
+    <script>
+	const likeButtons = document.querySelectorAll(".Likebuttons")
+	const numLikes = document.querySelectorAll(".Numlikes")
 
-    
-</div>
+	for (let i=0; i<likeButtons.length; i++) {
+		likeButtons[i].addEventListener('click', function(){ Like(i) })
+	}
 
+	function Like(i) {
+		let numberLikes = parseInt(numLikes[i].innerHTML)
+		numberLikes = numberLikes + 1
+    set(ref(db, "project " + i), {
+			numLikes: numberLikes,
+		});
 
+		
+	}
+</script>
 
+<script type="module">
+   // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtWcZEYi_WXnvhmVlDuplcWCwXW5uvrWg",
+    authDomain: "likebuttons1-ffa78.firebaseapp.com",
+    databaseURL: "https://likebuttons1-ffa78-default-rtdb.firebaseio.com",
+    projectId: "likebuttons1-ffa78",
+    storageBucket: "likebuttons1-ffa78.firebasestorage.app",
+    messagingSenderId: "599531123757",
+    appId: "1:599531123757:web:fb5fd33a78b3a4bd4474a4"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+    // Retrieve the number of likes for each project from the database
+    for (let i = 0; i < numLikes.length; i++) {
+        const projectRef = ref(db, "project " + i);
+        onValue(projectRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.numLikes !== undefined) {
+                numLikes[i].innerHTML = data.numLikes;
+            }
+        });
+    }
+    </script>
 </body>
+
+
+
+
+
+
