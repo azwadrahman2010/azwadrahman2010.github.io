@@ -45,35 +45,17 @@ body{
  <button class="Likebuttons">Like</button>
  <span class="Numlikes">0</span>     
     </div>
-    <script>
-	const likeButtons = document.querySelectorAll(".Likebuttons")
-	const numLikes = document.querySelectorAll(".Numlikes")
-
-	for (let i=0; i<likeButtons.length; i++) {
-		likeButtons[i].addEventListener('click', function(){ Like(i) })
-	}
-
-	function Like(i) {
-		let numberLikes = parseInt(numLikes[i].innerHTML)
-		numberLikes = numberLikes + 1
-    set(ref(db, "project " + i), {
-			numLikes: numberLikes,
-		});
-
-		
-	}
-</script>
 
 <script type="module">
    // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
- import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
   // Your web app's Firebase configuration
-  const firebaseConfig = {
+    const firebaseConfig = {
     apiKey: "AIzaSyDtWcZEYi_WXnvhmVlDuplcWCwXW5uvrWg",
     authDomain: "likebuttons1-ffa78.firebaseapp.com",
     databaseURL: "https://likebuttons1-ffa78-default-rtdb.firebaseio.com",
@@ -86,22 +68,25 @@ body{
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const likeButtons = document.querySelectorAll(".Likebuttons");
+  const numLikes = document.querySelectorAll(".Numlikes");
 
-    // Retrieve the number of likes for each project from the database
-    for (let i = 0; i < numLikes.length; i++) {
-        const projectRef = ref(db, "project " + i);
-        onValue(projectRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data && data.numLikes !== undefined) {
-                numLikes[i].innerHTML = data.numLikes;
-            }
-        });
-    }
-    </script>
+  for (let i=0; i<likeButtons.length; i++) {
+    likeButtons [i].addEventListener('click', (localFunction)=>{ Like(i) })
+      onValue(ref(db, "/project "+i+"/numLikes"), (snapshot) => {
+			let data = snapshot.val();
+			numLikes[i].innerHTML = data
+		});
+      }
+
+function Like(i) {
+    let numberLikes = parseInt(numLikes[i].innerHTML)
+    numberLikes = numberLikes + 1
+    set(ref(db, "project " + i), {
+			numLikes: numberLikes,
+		});
+
+}
+</script>
 </body>
-
-
-
-
-
 
